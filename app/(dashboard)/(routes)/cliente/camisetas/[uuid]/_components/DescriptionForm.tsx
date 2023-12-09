@@ -68,7 +68,7 @@ export const DescriptionForm = ({
     }
 
     return (
-        <div className="mt-6 border bg-[#cfcfcf] dark:bg-[#1f1f1f] rounded-md p-4">
+        <div className="mt-6 border bg-[#A5CCDB] dark:bg-[#1f1f1f] rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
                 Descripción de la camiseta
                 <Button onClick={toggleEdit} variant="customghost">

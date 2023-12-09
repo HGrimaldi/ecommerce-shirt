@@ -7,7 +7,7 @@ const guestRoutes = [
     {
         icon: Layout,
         label: "Dashboard",
-        href: "/",
+        href: "/clientes",
     },
     {
         icon: Compass,
@@ -26,7 +26,13 @@ const clienteRoutes = [
         icon: BarChart,
         label: "Estadisticas",
         href: "/cliente/estadisticas",
+    },
+    {
+        icon: Compass,
+        label: "Navegar",
+        href: "/search",
     }
+    
 ];
 
 export const SidebarRoutes = () => {

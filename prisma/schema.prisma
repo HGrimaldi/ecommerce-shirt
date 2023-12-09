@@ -2,51 +2,54 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "foreignKeys"
 }
 
 model tbl_camiseta {
-  id_camiseta Int @id @default(autoincrement())
-  uuid String @default(uuid())
-  id_usuario String
-  titulo String @db.Text
+  id_camiseta    Int     @id @default(autoincrement())
+  uuid        String  @default(uuid())
+  id_usuario  String
+  titulo      String  @db.Text
   descripcion String? @db.Text
-  imagen_url String? @db.Text
-  precio Float?
-  publicado Boolean @default(false)
+  imagen_url  String? @db.Text
+  precio      Float?
+  publicado   Boolean @default(false)
 
   id_categoria Int?
-  categoria tbl_categorias? @relation(fields: [id_categoria], references: [id_categoria])
+  categoria    tbl_categorias? @relation(fields: [id_categoria], references: [id_categoria])
 
   adjuntos tbl_adjuntos[]
+  compras tbl_compras[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([id_categoria])
+  @@fulltext([titulo])
 }
 
 model tbl_categorias {
-  id_categoria Int @id @default(autoincrement())
-  uuid String @default(uuid())
-  nombre String @unique
-  camiseta tbl_camiseta[]
+  id_categoria Int          @id @default(autoincrement())
+  uuid         String       @default(uuid())
+  nombre       String       @unique
+  camiseta      tbl_camiseta[]
 }
 
 model tbl_adjuntos {
-  id_adjunto Int @id @default(autoincrement())
-  uuid String @default(uuid())
-  nombre String
-  url String @db.Text
+  id_adjunto Int    @id @default(autoincrement())
+  uuid       String @default(uuid())
+  nombre     String
+  url        String @db.Text
 
   id_camiseta Int
-  curso tbl_camiseta @relation(fields: [id_camiseta], references: [id_camiseta], onDelete: Cascade)
+  camiseta    tbl_camiseta @relation(fields: [id_camiseta], references: [id_camiseta], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -54,4 +57,25 @@ model tbl_adjuntos {
   @@index([id_camiseta])
 }
 
+model tbl_compras {
+  id_compra  String @id @default(uuid())
+  userId String
 
+  id_camiseta   Int
+  camiseta      tbl_camiseta @relation(fields: [id_camiseta], references: [id_camiseta], onDelete: Cascade)
+  camiseta_uuid String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt()
+
+  @@unique([userId, camiseta_uuid])
+  @@index([id_camiseta])
+}
+
+model tbl_stripe_clientes {
+  id               String @id @default(uuid())
+  userId           String @unique
+  stripeCustomerId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

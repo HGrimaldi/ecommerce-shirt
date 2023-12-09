@@ -8,7 +8,8 @@ export async function POST(
 ) {
     try {
         const { userId } = auth();
-        const { titulo } = await req.json();
+        //const { titulo, descripcion, precio } = await req.json();
+        const data = await req.json();
 
         if (!userId) {
             return new NextResponse("No autorizado", { status: 401 });
@@ -17,7 +18,7 @@ export async function POST(
         const camiseta = await db.tbl_camiseta.create({
             data: {
                 id_usuario: userId,
-                titulo,
+                ...data
             }
         });
 
